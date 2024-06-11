@@ -1,7 +1,7 @@
 import 'package:dart_stl/stl_reader.dart';
 import 'package:dart_stl/stl_writer.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vector_math/vector_math.dart';
+import 'package:vector_math/vector_math.dart' show Triangle,Vector3;
 
 String oneTriangleSTL = '''
 solid test.stl
@@ -155,35 +155,35 @@ endsolid test
 void main() {
   group('reader tests', () {
     test('File should parse and create a list', () {
-      List<Triangle>? tris = StlReader.loadSTL(oneTriangleSTL);
+      List<Triangle>? tris = StlReader.fromSTL(oneTriangleSTL);
       expect((tris != null), true);
     });
     test('list should have one triangle', () {
-      List<Triangle>? tris = StlReader.loadSTL(oneTriangleSTL);
+      List<Triangle>? tris = StlReader.fromSTL(oneTriangleSTL);
       expect((tris!.length), 1);
     });
 
     test('list should have two triangle', () {
-      List<Triangle>? tris = StlReader.loadSTL(twoTriangleSTL);
+      List<Triangle>? tris = StlReader.fromSTL(twoTriangleSTL);
       expect((tris!.length), 2);
     });
 
     test('Vertex 1 data is correct', () {
-      List<Triangle>? tris = StlReader.loadSTL(oneTriangleSTL);
+      List<Triangle>? tris = StlReader.fromSTL(oneTriangleSTL);
       Vector3 v1 = tris![0].point0;
       expect((v1.x), 1.0);
       expect((v1.y), 2.0);
       expect((v1.z), 3.5);
     });
     test('Vertex 2 data is correct', () {
-      List<Triangle>? tris = StlReader.loadSTL(oneTriangleSTL);
+      List<Triangle>? tris = StlReader.fromSTL(oneTriangleSTL);
       Vector3 v2 = tris![0].point1;
       expect((v2.x), 80.0);
       expect((v2.y), 90.0);
       expect((v2.z), -10.0);
     });
     test('Vertex 3 data is correct', () {
-      List<Triangle>? tris = StlReader.loadSTL(oneTriangleSTL);
+      List<Triangle>? tris = StlReader.fromSTL(oneTriangleSTL);
       Vector3 v3 = tris![0].point2;
       expect((v3.x), 76.0);
       expect((v3.y), -4.0);
@@ -191,59 +191,59 @@ void main() {
     });
 
     test('Capitalized tokens', () {
-      List<Triangle>? tris = StlReader.loadSTL(capitalsButOK);
+      List<Triangle>? tris = StlReader.fromSTL(capitalsButOK);
       expect((tris != null), true);
       expect((tris!.length), 1);
     });
     test('No leading whitespace tokens', () {
-      List<Triangle>? tris = StlReader.loadSTL(noLeadingWhiteSpaceOK);
+      List<Triangle>? tris = StlReader.fromSTL(noLeadingWhiteSpaceOK);
       expect((tris != null), true);
       expect((tris!.length), 1);
     });
 
     test('bad header', () {
-      List<Triangle>? tris = StlReader.loadSTL(badHeader);
+      List<Triangle>? tris = StlReader.fromSTL(badHeader);
       expect((tris == null), true);
     });
 
     test('no header', () {
-      List<Triangle>? tris = StlReader.loadSTL(noHeader);
+      List<Triangle>? tris = StlReader.fromSTL(noHeader);
       expect((tris == null), true);
       
     });
 
     test('missingFacet', () {
-      List<Triangle>? tris = StlReader.loadSTL(missingFacet);
+      List<Triangle>? tris = StlReader.fromSTL(missingFacet);
       expect((tris == null), true);
       
     });
 
     test('missingOuter', () {
-      List<Triangle>? tris = StlReader.loadSTL(missingOuter);
+      List<Triangle>? tris = StlReader.fromSTL(missingOuter);
       expect((tris == null), true);
       
     });
 
     test('missingVertexComponent', () {
-      List<Triangle>? tris = StlReader.loadSTL(missingVertexComponent);
+      List<Triangle>? tris = StlReader.fromSTL(missingVertexComponent);
       expect((tris == null), true);
       
     });
 
     test('missingVertex', () {
-      List<Triangle>? tris = StlReader.loadSTL(missingVertex);
+      List<Triangle>? tris = StlReader.fromSTL(missingVertex);
       expect((tris == null), true);
       
     });
 
     test('missingEndFacet', () {
-      List<Triangle>? tris = StlReader.loadSTL(missingEndFacet);
+      List<Triangle>? tris = StlReader.fromSTL(missingEndFacet);
       expect((tris == null), true);
       
     });
 
     test('missingEndLoop', () {
-      List<Triangle>? tris = StlReader.loadSTL(missingEndLoop);
+      List<Triangle>? tris = StlReader.fromSTL(missingEndLoop);
       expect((tris == null), true);
       
     });
@@ -260,7 +260,7 @@ void main() {
         )
       ];
       String stl = StlWriter.toSTL("test",tris);
-      List<Triangle>? tris2 = StlReader.loadSTL(stl);
+      List<Triangle>? tris2 = StlReader.fromSTL(stl);
       expect(tris2!=null, true);
       expect(tris2![0].point0, tris[0].point0);
       expect(tris2[0].point1, tris[0].point1);
