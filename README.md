@@ -11,29 +11,50 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## Introduction
+
+A 100% dart library for reading and writing STL files, a 3D file format widely used in 3D printing.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+The initial release only supports reading and writing ASCII STL files.
+Binary support will be added in a future release.
+
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+This package requires the vector_math package. Install it first.
 
 ```dart
-const like = 'sample';
+ $ flutter pub add vector_math
 ```
 
-## Additional information
+## Examples
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+1\. Read an STL file from a File into a List of Triangles
+
+```dart
+import 'package:dart_stl/stl_reader.dart';
+
+File bunnyFile = File('bunny.stl');
+List<Triangle>? tris = StlReader.loadSTL(bunnyFile);
+```
+
+2\. Write a List of Triangles to an STL file
+
+```dart
+import 'package:dart_stl/stl_writer.dart';
+
+List<Triangle> bunnyTriangles = ...
+File bunnyFile = File('bunny.stl');
+
+StlWriter.writeSTL(bunnyTriangles,"bunny",bunnyFile);
+
+```
+
+3\. Write/read STL data to/from a String
+```dart
+List<Triangle> bunnyTriangles = ...
+String bunnySTL = StlWriter.toSTL(bunnyTriangles,"bunny");
+List<Triangles> bunnyTriangles2 = StlReader.fromSTL(bunnySTL);
+```

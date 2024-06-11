@@ -88,9 +88,10 @@ class StlReader {
 
   static List<Triangle>? loadSTLFile(File f) {
     var fileContent = f.readAsStringSync();
-    return loadSTL(fileContent);
+    return fromSTL(fileContent);
   }
-  static List<Triangle>? loadSTL(String fileContent) {
+
+  static List<Triangle>? fromSTL(String fileContent) {
     List<Triangle> triangles = [];
 
     List<String> lines = const LineSplitter().convert(fileContent);
