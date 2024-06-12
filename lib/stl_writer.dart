@@ -18,10 +18,11 @@ class StlWriter {
       return "$tag $sx $sy $sz";
   }
 
-  static void writeSTL(File f,String objectName,List<Triangle> tris) {
-    f.writeAsStringSync(toSTL(objectName,tris));
+  static void writeSTL(String fileName,String objectName,List<Triangle> tris) {
+    File(fileName).writeAsStringSync(toSTL(objectName,tris));
   }
-  
+
+
   static String toSTL(String objectName,List<Triangle> tris) {
     String result = writeLn("solid $objectName");
     String vertexTag = "        vertex";
