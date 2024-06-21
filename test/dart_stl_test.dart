@@ -1,7 +1,7 @@
 import 'package:dart_stl/stl_reader.dart';
 import 'package:dart_stl/stl_writer.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vector_math/vector_math.dart' show Triangle,Vector3;
+import 'package:vector_math/vector_math_64.dart' show Triangle,Vector3;
 
 String oneTriangleSTL = '''
 solid test.stl
