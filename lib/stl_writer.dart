@@ -11,10 +11,24 @@ enum StlToken { solid, endSolid, facet, endFacet, loop, endLoop, vertex, error }
 
 class StlWriter {
 
+  // Try to eliminate outputting "-0.0"
+  static double fixDouble(double d) {
+    const closeToZero = 0.00000001;
+    if (d.abs() < closeToZero) {
+      d = 0;
+    }
+
+    return d;
+  }
   static String vertexToSTL(String tag,Vector3 v) {
-      String sx = v.x.toStringAsFixed(6);
-      String sy = v.y.toStringAsFixed(6);
-      String sz = v.z.toStringAsFixed(6);
+
+      double x = fixDouble(v.x);
+      double y = fixDouble(v.y);
+      double z = fixDouble(v.z);
+
+      String sx = x.toStringAsFixed(6);
+      String sy = y.toStringAsFixed(6);
+      String sz = z.toStringAsFixed(6);
       return "$tag $sx $sy $sz";
   }
 

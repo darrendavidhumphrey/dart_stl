@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:vector_math/vector_math.dart' show Triangle,Vector3;
+import 'package:vector_math/vector_math_64.dart' show Triangle,Vector3;
 
 enum StlToken { solid, endSolid, facet, endFacet, loop, endLoop, vertex, error }
 
