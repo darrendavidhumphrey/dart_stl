@@ -1,11 +1,38 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:vector_math/vector_math_64.dart' show Triangle,Vector3;
+import 'package:vector_math/vector_math_64.dart' show Triangle, Vector3;
 
-enum StlToken { solid, endSolid, facet, endFacet, loop, endLoop, vertex, error }
+/// These are the tokens that make up an ASCII STL file
+enum StlToken {
+  /// Start of a solid
+  solid,
 
+  /// End of a solid
+  endSolid,
+
+  /// Start of a facet
+  facet,
+
+  /// End of a facet
+  endFacet,
+
+  /// Start of a loop
+  loop,
+
+  /// End of a loop
+  endLoop,
+
+  /// Vertex
+  vertex,
+
+  /// A token to indicate a parse error occurred
+  error,
+}
+
+/// A class for loading ASCII STL data from files or Strings
 class StlReader {
-  static StlToken tokenType(String s) {
+  /// Examines a string and determines what kind of token it is
+  static StlToken _tokenType(String s) {
     String line = s.toLowerCase().trimLeft();
 
     if (line.startsWith("solid")) {
@@ -26,9 +53,8 @@ class StlReader {
     return StlToken.error;
   }
 
-  static const int triangleLines = 7;
-
-  static Vector3? readVertex(String line) {
+  /// Reads a vertex from the string
+  static Vector3? _readVertex(String line) {
     List<String> tokens = line.trimLeft().split(' ');
 
     // Vertex should be 'vertex v1x v1y v1z'
@@ -46,8 +72,15 @@ class StlReader {
     return null;
   }
 
-  static bool readNextTriangle(List<String> lines, List<Triangle> tris, int lineNum) {
+  /// How many lines to read to parse a triangle
+  static const int _triangleLines = 7;
 
+  /// Read the next triangle from the list of lines
+  static bool _readNextTriangle(
+    List<String> lines,
+    List<Triangle> tris,
+    int lineNum,
+  ) {
     /* Valid triangle looks like this
         facet normal ni nj nk   )
           outer loop
@@ -59,38 +92,44 @@ class StlReader {
        */
 
     bool isValid =
-        ((lineNum+triangleLines) < lines.length) &&
-         // already read the first line if we're here
-         // (tokenType(lines[lineNum+0]) == StlToken.facet) &&
-         (tokenType(lines[lineNum+1]) == StlToken.loop) &&
-         (tokenType(lines[lineNum+2]) == StlToken.vertex) &&
-         (tokenType(lines[lineNum+3]) == StlToken.vertex) &&
-         (tokenType(lines[lineNum+4]) == StlToken.vertex) &&
-         (tokenType(lines[lineNum+5]) == StlToken.endLoop) &&
-         (tokenType(lines[lineNum+6]) == StlToken.endFacet);
+        ((lineNum + _triangleLines) < lines.length) &&
+        // already read the first line if we're here
+        // (tokenType(lines[lineNum+0]) == StlToken.facet) &&
+        (_tokenType(lines[lineNum + 1]) == StlToken.loop) &&
+        (_tokenType(lines[lineNum + 2]) == StlToken.vertex) &&
+        (_tokenType(lines[lineNum + 3]) == StlToken.vertex) &&
+        (_tokenType(lines[lineNum + 4]) == StlToken.vertex) &&
+        (_tokenType(lines[lineNum + 5]) == StlToken.endLoop) &&
+        (_tokenType(lines[lineNum + 6]) == StlToken.endFacet);
 
     if (isValid) {
-      Vector3? v1 = readVertex(lines[lineNum+2]);
-      Vector3? v2 = readVertex(lines[lineNum+3]);
-      Vector3? v3 = readVertex(lines[lineNum+4]);
+      Vector3? v1 = _readVertex(lines[lineNum + 2]);
+      Vector3? v2 = _readVertex(lines[lineNum + 3]);
+      Vector3? v3 = _readVertex(lines[lineNum + 4]);
 
       // Triangle is valid if all three vertices parsed correctly
       isValid = ((v1 != null) && (v2 != null) && (v3 != null));
 
       if (isValid) {
-          tris.add(Triangle.points(v1,v2,v3));
+        tris.add(Triangle.points(v1, v2, v3));
       }
     }
 
     return isValid;
   }
 
-
+  /// Load a STL file
+  /// This function takes a file parameter [f]
+  /// and returns List of triangles, or null on error
   static List<Triangle>? loadSTLFile(File f) {
     var fileContent = f.readAsStringSync();
     return fromSTL(fileContent);
   }
 
+  /// Create a list of triangles from a String containing
+  /// a valid STL file
+  /// This function takes a string parameter [fileContent]
+  /// and returns List of triangles, or null on error
   static List<Triangle>? fromSTL(String fileContent) {
     List<Triangle> triangles = [];
 
@@ -100,26 +139,25 @@ class StlReader {
     int currentLineNumber = 0;
     bool eof = false;
 
-    StlToken token = tokenType(lines[0]);
+    StlToken token = _tokenType(lines[0]);
 
     // ASCII STL will start with solid tag
     if (token == StlToken.solid) {
       currentLineNumber++;
 
       while ((currentLineNumber < lineCount) && (!eof)) {
-        token = tokenType(lines[currentLineNumber]);
+        token = _tokenType(lines[currentLineNumber]);
 
         if (token == StlToken.facet) {
-          bool success = readNextTriangle(lines, triangles, currentLineNumber);
+          bool success = _readNextTriangle(lines, triangles, currentLineNumber);
           if (success) {
-            currentLineNumber += triangleLines;
+            currentLineNumber += _triangleLines;
           } else {
             eof = true;
           }
         } else if (token == StlToken.endSolid) {
           eof = true;
-        }
-        else {
+        } else {
           // Uh oh. In case of unexpected line, abort
           eof = true;
         }

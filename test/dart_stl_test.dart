@@ -1,7 +1,7 @@
 import 'package:dart_stl/stl_reader.dart';
 import 'package:dart_stl/stl_writer.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:vector_math/vector_math_64.dart' show Triangle,Vector3;
+import 'package:vector_math/vector_math_64.dart' show Triangle, Vector3;
 
 String oneTriangleSTL = '''
 solid test.stl
@@ -33,7 +33,6 @@ facet normal 0.0 0.0 -320.0
 endfacet
 endsolid
 ''';
-
 
 String capitalsButOK = '''
 SOLID test.stl
@@ -116,7 +115,7 @@ ENDFACET
 ENDSOLID
 ''';
 
-String missingEndLoop= '''
+String missingEndLoop = '''
 SOLID test.stl
 FACET NORMAL 0.0 0.0 -320.0
 OUTER LOOP
@@ -128,7 +127,7 @@ ENDFACET
 ENDSOLID
 ''';
 
-String missingEndFacet= '''
+String missingEndFacet = '''
 SOLID test.stl
 FACET NORMAL 0.0 0.0 -320.0
 OUTER LOOP
@@ -140,7 +139,7 @@ ENDLOOP
 ENDSOLID
 ''';
 
-String testOutput ='''
+String testOutput = '''
 solid test
 facet normal 0.000000 0.000000 -1.000000
     outer loop
@@ -209,63 +208,54 @@ void main() {
     test('no header', () {
       List<Triangle>? tris = StlReader.fromSTL(noHeader);
       expect((tris == null), true);
-      
     });
 
     test('missingFacet', () {
       List<Triangle>? tris = StlReader.fromSTL(missingFacet);
       expect((tris == null), true);
-      
     });
 
     test('missingOuter', () {
       List<Triangle>? tris = StlReader.fromSTL(missingOuter);
       expect((tris == null), true);
-      
     });
 
     test('missingVertexComponent', () {
       List<Triangle>? tris = StlReader.fromSTL(missingVertexComponent);
       expect((tris == null), true);
-      
     });
 
     test('missingVertex', () {
       List<Triangle>? tris = StlReader.fromSTL(missingVertex);
       expect((tris == null), true);
-      
     });
 
     test('missingEndFacet', () {
       List<Triangle>? tris = StlReader.fromSTL(missingEndFacet);
       expect((tris == null), true);
-      
     });
 
     test('missingEndLoop', () {
       List<Triangle>? tris = StlReader.fromSTL(missingEndLoop);
       expect((tris == null), true);
-      
     });
-
   });
 
   group('writer tests', () {
     test('Save to STL, re-read and compare', () {
       List<Triangle> tris = [
         Triangle.points(
-          Vector3(0,0,0),
-          Vector3(0,1.7,-12.9),
-          Vector3(100.456,100.67881,-0.12)
-        )
+          Vector3(0, 0, 0),
+          Vector3(0, 1.7, -12.9),
+          Vector3(100.456, 100.67881, -0.12),
+        ),
       ];
-      String stl = StlWriter.toSTL("test",tris);
+      String stl = StlWriter.toSTL("test", tris);
       List<Triangle>? tris2 = StlReader.fromSTL(stl);
-      expect(tris2!=null, true);
+      expect(tris2 != null, true);
       expect(tris2![0].point0, tris[0].point0);
       expect(tris2[0].point1, tris[0].point1);
       expect(tris2[0].point2, tris[0].point2);
     });
-
   });
 }
