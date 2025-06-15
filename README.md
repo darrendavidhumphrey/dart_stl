@@ -28,33 +28,3 @@ This package requires the vector_math package. Install it first.
 ```dart
  $ flutter pub add vector_math
 ```
-
-## Examples
-
-1\. Read an STL file from a File into a List of Triangles
-
-```dart
-import 'package:dart_stl/stl_reader.dart';
-
-File bunnyFile = File('bunny.stl');
-List<Triangle>? tris = StlReader.loadSTL(bunnyFile);
-```
-
-2\. Write a List of Triangles to an STL file
-
-```dart
-import 'package:dart_stl/stl_writer.dart';
-
-List<Triangle> bunnyTriangles = ...
-File bunnyFile = File('bunny.stl');
-
-StlWriter.writeSTL(bunnyTriangles,"bunny",bunnyFile);
-
-```
-
-3\. Write/read STL data to/from a String
-```dart
-List<Triangle> bunnyTriangles = ...
-String bunnySTL = StlWriter.toSTL(bunnyTriangles,"bunny");
-List<Triangles> bunnyTriangles2 = StlReader.fromSTL(bunnySTL);
-```

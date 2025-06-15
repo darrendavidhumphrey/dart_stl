@@ -31,6 +31,10 @@ enum StlToken {
 
 /// A class for loading ASCII STL data from files or Strings
 class StlReader {
+
+  /// Private constructor. All public APIs are static
+  StlReader._();
+
   /// Examines a string and determines what kind of token it is
   static StlToken _tokenType(String s) {
     String line = s.toLowerCase().trimLeft();
