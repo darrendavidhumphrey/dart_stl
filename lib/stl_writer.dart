@@ -3,10 +3,8 @@ import 'package:vector_math/vector_math_64.dart' show Triangle, Vector3;
 
 /// A class for saving triangle lists to ASCII STL files or Strings
 class StlWriter {
-
   /// Private constructor. All public APIs are static
   StlWriter._();
-
 
   /// Helper function that tries to eliminate outputting "-0.0"
   /// It takes a single double parameter [d]

@@ -10,10 +10,10 @@ void main() {
   List<Triangle>? tris = StlReader.loadSTLFile(bunnyFile);
 
   /// Write a list of Triangles to an STL file
-  StlWriter.writeSTL("bunny2.stl","bunny",tris!);
+  StlWriter.writeSTL("bunny2.stl", "bunny", tris!);
 
   /// Write a list of Triangles to a string
-  String bunnySTL = StlWriter.toSTL("bunny",tris);
+  String bunnySTL = StlWriter.toSTL("bunny", tris);
 
   // Convert string back into list of Triangle
   List<Triangle>? bunnyTriangles2 = StlReader.fromSTL(bunnySTL);

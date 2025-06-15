@@ -25,6 +25,3 @@ Binary support will be added in a future release.
 
 This package requires the vector_math package. Install it first.
 
-```dart
- $ flutter pub add vector_math
-```

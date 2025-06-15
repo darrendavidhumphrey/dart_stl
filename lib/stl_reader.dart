@@ -31,7 +31,6 @@ enum StlToken {
 
 /// A class for loading ASCII STL data from files or Strings
 class StlReader {
-
   /// Private constructor. All public APIs are static
   StlReader._();
 
